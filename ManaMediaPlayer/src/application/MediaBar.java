@@ -20,7 +20,7 @@ public class MediaBar extends HBox {
 	Slider timeSlider = new Slider();
 	Slider volumeSlider = new Slider();
 	Button playButton = new Button(" || ");
-	Label volume = new Label("Volume: ");
+	Label volumeLabel = new Label("Volume: ");
 	MediaPlayer mediaPlayer;
 
 	public MediaBar(MediaPlayer player) {
@@ -39,7 +39,7 @@ public class MediaBar extends HBox {
 
 		getChildren().add(playButton);
 		getChildren().add(timeSlider);
-		getChildren().add(volume);
+		getChildren().add(volumeLabel);
 		getChildren().add(volumeSlider);
 
 		playButton.setOnAction(new EventHandler<ActionEvent>() {
@@ -65,19 +65,27 @@ public class MediaBar extends HBox {
 			
 			@Override
 			public void invalidated(Observable arg0) {
-				// TODO Auto-generated method stub
-				updateValues();
-				
+				updateValues();		
 			}
 		});
 		timeSlider.valueProperty().addListener(new InvalidationListener() {
 			
 			@Override
 			public void invalidated(Observable observable) {
-				// TODO Auto-generated method stub
 				if (timeSlider.isPressed())
 				{
 					mediaPlayer.seek(mediaPlayer.getMedia().getDuration().multiply(timeSlider.getValue()/100));
+				}	
+			}
+		});
+		
+		volumeSlider.valueProperty().addListener(new InvalidationListener() {
+			
+			@Override
+			public void invalidated(Observable observable) {
+				if (volumeSlider.isPressed())
+				{
+					mediaPlayer.setVolume(volumeSlider.getValue()/100);
 				}
 				
 			}
@@ -85,10 +93,7 @@ public class MediaBar extends HBox {
 	}
 	protected void updateValues() {
 		Platform.runLater(new Runnable() {
-			
-			
 			public void run() {
-				// TODO Auto-generated method stub
 				timeSlider.setValue(mediaPlayer.getCurrentTime().toMillis()/mediaPlayer.getTotalDuration().toMillis()*100);
 			}
 		});
