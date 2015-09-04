@@ -10,7 +10,7 @@ import javafx.scene.paint.Color;
 public class Main extends Application {
 	@Override
 	public void start(Stage primaryStage) {
-		Player player = new Player("file:///D:S.mp4");
+		Player player = new Player("file:///d:Life.mp4");
 		Scene scene= new Scene(player,1080, 480, Color.BLACK);
 		primaryStage.setScene(scene);
 		primaryStage.show();			

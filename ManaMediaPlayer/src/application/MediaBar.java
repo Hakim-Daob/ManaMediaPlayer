@@ -1,5 +1,8 @@
 package application;
 
+import javafx.application.Platform;
+import javafx.beans.InvalidationListener;
+import javafx.beans.Observable;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -29,6 +32,7 @@ public class MediaBar extends HBox {
 		volumeSlider.setPrefWidth(70);
 		volumeSlider.setMinWidth(30);
 		volumeSlider.setValue(100);
+		
 		HBox.setHgrow(timeSlider, Priority.ALWAYS);
 
 		playButton.setPrefWidth(30);
@@ -48,7 +52,7 @@ public class MediaBar extends HBox {
 						mediaPlayer.play();
 					} else
 						mediaPlayer.pause();
-					playButton.setText(">");
+					    playButton.setText(">");
 				}
 
 				if (status == status.PAUSED || status == status.HALTED || status == status.STOPPED) {
@@ -57,6 +61,39 @@ public class MediaBar extends HBox {
 				}
 			}
 		});
+		mediaPlayer.currentTimeProperty().addListener(new InvalidationListener() {
+			
+			@Override
+			public void invalidated(Observable arg0) {
+				// TODO Auto-generated method stub
+				updateValues();
+				
+			}
+		});
+		timeSlider.valueProperty().addListener(new InvalidationListener() {
+			
+			@Override
+			public void invalidated(Observable observable) {
+				// TODO Auto-generated method stub
+				if (timeSlider.isPressed())
+				{
+					mediaPlayer.seek(mediaPlayer.getMedia().getDuration().multiply(timeSlider.getValue()/100));
+				}
+				
+			}
+		});
 	}
+	protected void updateValues() {
+		Platform.runLater(new Runnable() {
+			
+			
+			public void run() {
+				// TODO Auto-generated method stub
+				timeSlider.setValue(mediaPlayer.getCurrentTime().toMillis()/mediaPlayer.getTotalDuration().toMillis()*100);
+			}
+		});
+		
+	}
+	
 
 }
